@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.listaelementos.adapters.ContactoAdapter;
 import com.example.listaelementos.models.Contacto;
 
 import java.util.ArrayList;
@@ -47,7 +48,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         contactos.add(contacto);
         contactos.add(contacto2);
 
-        ArrayAdapter<Contacto> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, contactos);
+        //ArrayAdapter<Contacto> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, contactos);
+
+        ArrayAdapter<Contacto> adapter = new ContactoAdapter(this, R.layout.contato_item,contactos);
 
         lvContactos.setAdapter(adapter);
         lvContactos.setOnItemClickListener(this);
