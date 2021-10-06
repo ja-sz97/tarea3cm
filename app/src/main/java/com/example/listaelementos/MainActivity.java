@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         lvContactos.setAdapter(adapter);
         lvContactos.setOnItemClickListener(this);
 
+
+
     }
 
     @Override
@@ -62,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         Intent intent = new Intent(this,DetalleActivity.class);
         intent.putExtra("nombre", nombre);
+        intent.putExtra("contacto", contacto);
+
         startActivity(intent);
 
     }

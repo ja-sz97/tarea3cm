@@ -1,6 +1,8 @@
 package com.example.listaelementos.models;
 
-public class Contacto {
+import java.io.Serializable;
+
+public class Contacto implements Serializable {
 
     String nombre;
     String paterno;
