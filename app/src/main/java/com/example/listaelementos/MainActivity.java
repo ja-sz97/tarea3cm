@@ -1,10 +1,14 @@
 package com.example.listaelementos;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,6 +16,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.listaelementos.adapters.ContactoAdapter;
+import com.example.listaelementos.db.ContactoDataSource;
 import com.example.listaelementos.models.Contacto;
 
 import java.util.ArrayList;
@@ -19,38 +24,32 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
+    public static final int REQUEST_CODE_AGREGAR_CONTACTO = 1001;
+    public static final String TAG = "MainActivity";
+    public static final int REQUEST_CODE_DETALLE_ACTIVITY = 1002;
     ListView lvContactos;
     List<Contacto> contactos;
+    ContactoDataSource dataSource;
+    ArrayAdapter<Contacto> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setTitle("AGENDA");
+        setTitle("Agenda");
 
         lvContactos = findViewById(R.id.lvContactos);
 
-        contactos = new ArrayList<>();
 
-        Contacto contacto = new Contacto();
-        contacto.setNombre("Loreto");
-        contacto.setPaterno("Lopez");
-        contacto.setMaterno("Pino");
-        contacto.setTelefono("+569878764");
+        dataSource = new ContactoDataSource(this);
 
-        Contacto contacto2 = new Contacto();
-        contacto2.setNombre("Jorge");
-        contacto2.setPaterno("Pavez");
-        contacto2.setMaterno("Retamal");
-        contacto2.setTelefono("+56987768");
+        dataSource.openDB();
+        contactos = dataSource.obtenerContactos();
+        dataSource.closeDB();
 
 
-        contactos.add(contacto);
-        contactos.add(contacto2);
 
-        //ArrayAdapter<Contacto> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, contactos);
-
-        ArrayAdapter<Contacto> adapter = new ContactoAdapter(this, R.layout.contato_item,contactos);
+        adapter = new ContactoAdapter(this, R.layout.contato_item,contactos);
 
         lvContactos.setAdapter(adapter);
         lvContactos.setOnItemClickListener(this);
@@ -70,7 +69,57 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         intent.putExtra("nombre", nombre);
         intent.putExtra("contacto", contacto);
 
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_DETALLE_ACTIVITY);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main_actiivity,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.action_agregar_contacto:
+                Intent intent = new Intent(this, AgregarContatoActivity.class);
+                //startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_AGREGAR_CONTACTO);
+                break;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == REQUEST_CODE_AGREGAR_CONTACTO && resultCode == 1){
+
+            Log.i(TAG, "actualizar el listview");
+            actualizarLista();
+
+
+        }
+
+        if (requestCode == REQUEST_CODE_DETALLE_ACTIVITY && resultCode == -1){
+            //actualizar
+        }
+
+    }
+
+    public void actualizarLista(){
+        dataSource.openDB();
+        contactos = dataSource.obtenerContactos();
+        dataSource.closeDB();
+
+        adapter.clear();
+        adapter.addAll(contactos);
+        adapter.notifyDataSetChanged();
     }
 }

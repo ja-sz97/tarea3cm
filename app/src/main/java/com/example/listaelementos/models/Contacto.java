@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 public class Contacto implements Serializable {
 
+    long id;
     String nombre;
     String paterno;
     String materno;
     String telefono;
-
 
     public String getNombre() {
         return nombre;
@@ -42,9 +42,16 @@ public class Contacto implements Serializable {
         this.telefono = telefono;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     @Override
     public String toString() {
-        return nombre + " " + paterno + " " + materno ;
+        return nombre+" "+paterno +" "+ materno;
     }
 }
