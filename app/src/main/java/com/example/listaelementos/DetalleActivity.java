@@ -11,11 +11,16 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.listaelementos.db.ContactoDataSource;
 import com.example.listaelementos.models.Contacto;
+
+import com.example.listaelementos.MainActivity.*;
 
 public class DetalleActivity extends AppCompatActivity {
 
     TextView tvNombre, tvPaterno, tvMaterno, tvTelefono;
+    ContactoDataSource dataSource;
+
     long id;
 
     @Override
@@ -25,12 +30,14 @@ public class DetalleActivity extends AppCompatActivity {
         setTitle("DETALLE PERSONA");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        dataSource = new ContactoDataSource(this);
 
         Intent intent = getIntent();
         //String nombre = intent.getStringExtra("nombre");
 
         Contacto contacto = (Contacto) intent.getSerializableExtra("contacto");
         String nombre = contacto.getNombre();
+        id = contacto.getId();
 
         tvNombre = findViewById(R.id.tvNombre);
         tvPaterno = findViewById(R.id.tvPaterno);
@@ -59,7 +66,12 @@ public class DetalleActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.action_eliminar:
-                Toast.makeText(this, "Eliminar", Toast.LENGTH_LONG).show();
+                dataSource.openDB();
+                eliminarContacto();
+                dataSource.closeDB();
+                //String texto = "id = "+id;
+                //Toast.makeText(this, texto, Toast.LENGTH_LONG).show();
+
                 break;
             default:
                 break;
@@ -68,6 +80,15 @@ public class DetalleActivity extends AppCompatActivity {
     }
 
     public void eliminarContacto(){
-        //id del contacto
+
+        String texto = "id = "+id;
+        Toast.makeText(this, texto, Toast.LENGTH_LONG).show();
+        dataSource.eliminarContacto(id);
+        setResult(1);
+        finish();
+
+
+
+
     }
 }

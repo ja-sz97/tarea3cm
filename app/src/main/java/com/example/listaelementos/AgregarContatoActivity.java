@@ -73,7 +73,6 @@ public class AgregarContatoActivity extends AppCompatActivity {
             Log.i("AgregarContactoActivity", "error");
         }
 
-
     }
 
     public long crearContacto(String nombre,String paterno,String materno,String telefono){

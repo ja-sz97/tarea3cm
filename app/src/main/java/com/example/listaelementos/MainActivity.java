@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         intent.putExtra("contacto", contacto);
 
         startActivityForResult(intent, REQUEST_CODE_DETALLE_ACTIVITY);
+        actualizarLista();
 
     }
 
@@ -103,8 +104,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             Log.i(TAG, "actualizar el listview");
             actualizarLista();
+        }
 
-
+        if(requestCode == REQUEST_CODE_DETALLE_ACTIVITY && resultCode == 1){
+            actualizarLista();
         }
 
         if (requestCode == REQUEST_CODE_DETALLE_ACTIVITY && resultCode == -1){
