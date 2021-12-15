@@ -81,8 +81,8 @@ public class DetalleActivity extends AppCompatActivity {
 
     public void eliminarContacto(){
 
-        String texto = "id = "+id;
-        Toast.makeText(this, texto, Toast.LENGTH_LONG).show();
+        //String texto = "id = "+id;
+        //Toast.makeText(this, texto, Toast.LENGTH_LONG).show();
         dataSource.eliminarContacto(id);
         setResult(1);
         finish();
